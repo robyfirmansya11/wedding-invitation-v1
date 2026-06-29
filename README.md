@@ -1,58 +1,136 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Wedding Invitation 💍
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Undangan pernikahan digital berbasis web, dibangun dengan Laravel. Mendukung personalisasi tamu lewat URL, RSVP, ucapan & doa, dan dashboard admin — semuanya terhubung ke database.
 
-## About Laravel
+## ✨ Fitur
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Cover interaktif** — tampilan "Buka Undangan" dengan transisi halus sebelum konten utama muncul
+- **Personalisasi tamu** — link unik per tamu lewat parameter URL (`?to=Nama+Tamu`), otomatis tampil di cover dan mengisi form RSVP
+- **Hitung mundur (countdown)** — real-time menuju hari pernikahan
+- **Galeri foto** — grid foto dengan efek hover zoom
+- **Cerita cinta** — timeline kisah pasangan
+- **Lokasi acara** — Google Maps embed untuk akad & resepsi
+- **RSVP** — konfirmasi kehadiran tersimpan ke database
+- **Ucapan & doa** — guest book yang tersimpan dan ditampilkan secara real-time
+- **Amplop digital** — info rekening dengan tombol salin ke clipboard
+- **Musik latar** — auto-play setelah undangan dibuka, dengan tombol play/pause
+- **Animasi scroll** — efek fade-in pada setiap section saat di-scroll
+- **Dashboard admin** — rekap RSVP (hadir/tidak hadir/ragu) dan daftar ucapan, dilindungi autentikasi
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🛠️ Tech Stack
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+| Komponen | Teknologi |
+|---|---|
+| Backend | Laravel 13 |
+| Database | MySQL |
+| Frontend | Blade, Tailwind CSS v4, Alpine.js |
+| Build tool | Vite |
+| Autentikasi | Laravel Breeze (Blade stack) |
+| Font | Cormorant Garamond, Jost (Google Fonts) |
 
-## Learning Laravel
+## 📋 Prasyarat
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- PHP ^8.2
+- Composer
+- Node.js & npm
+- MySQL
+- Web server lokal (mis. [Laravel Herd](https://herd.laravel.com) atau [Laragon](https://laragon.org))
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🚀 Instalasi
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+1. **Clone repository**
+   ```bash
+   git clone https://github.com/robyfirmansya11/wedding-invitation.git
+   cd wedding-invitation
+   ```
 
-## Agentic Development
+2. **Install dependency PHP & JS**
+   ```bash
+   composer install
+   npm install
+   ```
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+3. **Setup environment**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-```bash
-composer require laravel/boost --dev
+   Edit `.env`, sesuaikan koneksi database:
+   ```env
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=nama_database_kamu
+   DB_USERNAME=root
+   DB_PASSWORD=
+   ```
 
-php artisan boost:install
+4. **Buat database** (lewat HeidiSQL/phpMyAdmin/CLI MySQL), lalu jalankan migration:
+   ```bash
+   php artisan migrate
+   ```
+
+5. **Buat akun admin** untuk akses dashboard:
+   ```bash
+   php artisan tinker
+   ```
+   ```php
+   \App\Models\User::create([
+       'name' => 'Admin',
+       'email' => 'admin@undangan.test',
+       'password' => bcrypt('password_kamu'),
+   ]);
+   ```
+
+6. **Jalankan aplikasi**
+   ```bash
+   npm run dev
+   ```
+   Buka project di browser sesuai domain/host lokal yang dikonfigurasi (mis. `http://wedding-invitation.test`).
+
+## 🔗 Penggunaan
+
+- **Halaman utama**: `/` — undangan utama
+- **Link personal per tamu**: `/?to=Nama+Tamu`
+- **Login admin**: `/login`
+- **Dashboard admin**: `/dashboard` (butuh login)
+
+## 📁 Struktur Utama
+
+```
+app/
+├── Http/Controllers/
+│   ├── InvitationController.php   # Menampilkan halaman utama
+│   ├── GuestController.php        # Menyimpan data RSVP
+│   ├── WishController.php         # Menyimpan ucapan & doa
+│   └── DashboardController.php    # Rekap data untuk admin
+├── Models/
+│   ├── Guest.php
+│   └── Wish.php
+
+resources/views/
+├── invitation.blade.php           # Layout utama (single page)
+├── partials/                      # Section-section undangan
+│   ├── cover.blade.php
+│   ├── couple.blade.php
+│   ├── event.blade.php
+│   ├── countdown.blade.php
+│   ├── story.blade.php
+│   ├── gallery.blade.php
+│   ├── gift.blade.php
+│   ├── rsvp.blade.php
+│   ├── wishes.blade.php
+│   └── footer.blade.php
+└── dashboard.blade.php            # Dashboard admin
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+## 📝 Catatan
 
-## Contributing
+- Foto pada galeri dan profil mempelai menggunakan placeholder dari [Picsum Photos](https://picsum.photos) — ganti dengan foto asli sebelum digunakan untuk acara sesungguhnya.
+- Pastikan file musik latar (jika digunakan) disimpan di `public/audio/` dan bukan materi berlisensi tanpa izin.
+- Halaman registrasi publik (`/register`) sengaja dinonaktifkan — hanya 1 akun admin yang dibuat manual lewat `tinker`.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 📄 Lisensi
 
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Proyek pribadi untuk keperluan acara pernikahan. Bebas digunakan dan dimodifikasi.
